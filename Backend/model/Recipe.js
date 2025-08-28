@@ -14,7 +14,15 @@ const IngredientRequirementSchema = new mongoose.Schema({
     unit: { 
         type: String, 
         required: true,
-        enum: ['g', 'kg', 'pieces', 'ml', 'l', 'tsp', 'tbsp', 'cup', 'pinch']
+        enum: [
+            'g', 'kg', 
+            'ml', 'l', 
+            'tsp', 'tbsp', 'cup', 'pinch',
+            'pieces', 'cloves', 'slices',
+            'inch', 'cm',
+            'small', 'medium', 'large',
+            'bunch', 'handful'
+        ]
     }
     });
 

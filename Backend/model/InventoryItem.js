@@ -16,10 +16,18 @@ const InventoryItemSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
-    unit: {
-        type: String,
+    unit: { 
+        type: String, 
         required: true,
-        enum: ['g', 'kg', 'pieces', 'ml', 'l', 'tsp', 'tbsp']
+        enum: [
+            'g', 'kg', 
+            'ml', 'l', 
+            'tsp', 'tbsp', 'cup', 'pinch',
+            'pieces', 'cloves', 'slices',
+            'inch', 'cm',
+            'small', 'medium', 'large',
+            'bunch', 'handful'
+        ]
     },
     threshold: {
         type: Number,
