@@ -280,7 +280,7 @@ const sampleInventory = [
         const recipes = await Recipe.insertMany(sampleRecipes);
         console.log(`Added ${recipes.length} recipes`);
 
-        console.log('🎉 Mock data generation completed successfully!');
+        console.log(' Mock data generation completed successfully!');
         console.log('\nSummary:');
         console.log(`   - Inventory Items: ${inventoryItems.length}`);
         console.log(`   - Recipes: ${recipes.length}`);
