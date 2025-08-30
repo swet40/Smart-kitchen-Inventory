@@ -16,22 +16,19 @@ const InventoryItemSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
-    unit: { 
-        type: String, 
+    unit: {
+        type: String,
         required: true,
-        enum: [
-            'g', 'kg', 
-            'ml', 'l', 
-            'tsp', 'tbsp', 'cup', 'pinch',
-            'pieces', 'cloves', 'slices',
-            'inch', 'cm',
-            'small', 'medium', 'large',
-            'bunch', 'handful'
-        ]
+        enum: ['g', 'kg', 'pieces', 'ml', 'l', 'tsp', 'tbsp', 'cup']
     },
     threshold: {
         type: Number,
         default: 0
+    },
+    // ADD THIS NEW FIELD
+    perishable: {
+        type: Boolean,
+        default: false
     },
     isPresent: {
         type: Boolean,
@@ -39,6 +36,6 @@ const InventoryItemSchema = new mongoose.Schema({
     }
     }, { 
     timestamps: true 
-    });
+});
 
 module.exports = mongoose.model('InventoryItem', InventoryItemSchema);

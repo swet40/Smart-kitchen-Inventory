@@ -10,6 +10,8 @@ import Recipes from './pages/Recipes';
 import RecipeDetailPage from './pages/RecipeDetailPage';
 import DebugSubstitutes from './components/recipes/DebugSubstitutes';
 import { AppStateProvider } from './contexts/AppState';
+import WasteAlerts from './components/dashboard/WasteAlerts';
+import MealPlanner from './components/meal/MealPlanner';
 
 
 
@@ -36,7 +38,7 @@ const theme = createTheme({
         }}
         autoHideDuration={3000}
         >
-        {/* <AppStateProvider> */}
+        <AppStateProvider>
         <Router>
             <div className="App">
             <Navbar />
@@ -47,12 +49,13 @@ const theme = createTheme({
                 <Route path="/recipes" element={<Recipes />} />
                 <Route path="/recipes/:id" element={<RecipeDetailPage />} />
                 <Route path="/debug/:id" element={<DebugSubstitutes />} />
-
+                <Route path="/waste-alerts" element={<WasteAlerts />} />
+                <Route path="/meal-planner" element={<MealPlanner />} />
                 </Routes>
             </main>
             </div>
         </Router>
-        {/* </AppStateProvider> */}
+        </AppStateProvider>
         </SnackbarProvider>
         </ThemeProvider>
     );

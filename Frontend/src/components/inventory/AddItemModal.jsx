@@ -13,7 +13,7 @@ const [formData, setFormData] = useState({
     currentQuantity: 0,
     unit: 'g',
     threshold: 0
-  });
+    });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { showError } = useNotifications();

@@ -53,10 +53,33 @@ function Navbar() {
             >
                 Recipes
             </Button>
+            {/* ADD THESE NEW BUTTONS */}
+            <Button
+                color="inherit"
+                component={Link}
+                to="/waste-alerts"
+                sx={{ 
+                mx: 1,
+                backgroundColor: location.pathname === '/waste-alerts' ? 'rgba(255,255,255,0.1)' : 'transparent'
+                }}
+            >
+                Waste Alerts
+            </Button>
+            <Button
+                color="inherit"
+                component={Link}
+                to="/meal-planner"
+                sx={{ 
+                mx: 1,
+                backgroundColor: location.pathname === '/meal-planner' ? 'rgba(255,255,255,0.1)' : 'transparent'
+                }}
+            >
+                Meal Planner
+            </Button>
             </Box>
         </Toolbar>
         </AppBar>
     );
-    }
+}
 
 export default Navbar;
