@@ -6,6 +6,7 @@ import Navbar from './components/common/Navbar';
 import Dashboard from './pages/Dashboard';
 import Inventory from './pages/Inventory';
 import Recipes from './pages/Recipes';
+import RecipeDetailPage from './pages/RecipeDetailPage';
 
 
 const theme = createTheme({
@@ -31,6 +32,7 @@ const theme = createTheme({
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/inventory" element={<Inventory />} />
                 <Route path="/recipes" element={<Recipes />} />
+                <Route path="/recipes/:id" element={<RecipeDetailPage />} />
                 </Routes>
             </main>
             </div>

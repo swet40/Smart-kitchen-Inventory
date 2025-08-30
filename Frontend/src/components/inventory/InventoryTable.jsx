@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Paper, Button, Box, Alert, CircularProgress, IconButton
-    } from '@mui/material';
-    import { Delete, Edit } from '@mui/icons-material';
-    import { inventoryAPI } from '../../services/api';
-    import AddItemModal from './AddItemModal';
+} from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+import { inventoryAPI } from '../../services/api';
+import AddItemModal from './AddItemModal';
+import EditItemModal from './EditItemModal';
 
-    function InventoryTable() {
+function InventoryTable() {
     const [inventory, setInventory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [modalOpen, setModalOpen] = useState(false);
+    const [addModalOpen, setAddModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
 
     useEffect(() => {
         fetchInventory();
@@ -26,6 +29,11 @@ import {
         } finally {
         setLoading(false);
         }
+    };
+
+    const handleEditClick = (item) => {
+        setSelectedItem(item);
+        setEditModalOpen(true);
     };
 
     const handleDelete = async (id) => {
@@ -43,15 +51,22 @@ import {
     return (
         <div>
         <Box mb={2}>
-            <Button variant="contained" color="primary" onClick={() => setModalOpen(true)}>
+            <Button variant="contained" color="primary" onClick={() => setAddModalOpen(true)}>
             Add New Item
             </Button>
         </Box>
 
         <AddItemModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
+            open={addModalOpen}
+            onClose={() => setAddModalOpen(false)}
             onItemAdded={fetchInventory}
+        />
+
+        <EditItemModal
+            open={editModalOpen}
+            onClose={() => setEditModalOpen(false)}
+            item={selectedItem}
+            onItemUpdated={fetchInventory}
         />
 
         <TableContainer component={Paper}>
@@ -75,10 +90,18 @@ import {
                     <TableCell>{item.unit}</TableCell>
                     <TableCell>{item.threshold}</TableCell>
                     <TableCell>
-                    <IconButton size="small" color="primary">
+                    <IconButton 
+                        size="small" 
+                        color="primary"
+                        onClick={() => handleEditClick(item)}
+                    >
                         <Edit />
                     </IconButton>
-                    <IconButton size="small" color="error" onClick={() => handleDelete(item._id)}>
+                    <IconButton 
+                        size="small" 
+                        color="error" 
+                        onClick={() => handleDelete(item._id)}
+                    >
                         <Delete />
                     </IconButton>
                     </TableCell>
