@@ -134,22 +134,39 @@ router.get('/with-serving-info', async (req, res) => {
     }
     });
 
+    // GET substitution suggestions for a specific recipe
     router.get('/:id/substitutes', async (req, res) => {
     try {
+        console.log('Substitutes request for recipe ID:', req.params.id);
+        
         const { findSubstitutes } = require('../utils/substituteFinder');
         const recipe = await Recipe.findById(req.params.id);
         const inventory = await InventoryItem.find();
         
         if (!recipe) {
+        console.log('Recipe not found');
         return res.status(404).json({ message: 'Recipe not found' });
         }
         
+        console.log('Recipe:', recipe.name);
+        console.log('Inventory items:', inventory.length);
+        
         const substituteInfo = await findSubstitutes(recipe, inventory);
+        
+        console.log('Substitutes found:', {
+        missing: substituteInfo.missingIngredients.length,
+        suggestions: substituteInfo.substitutionSuggestions.length
+        });
+        
         res.json(substituteInfo);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Substitutes error:', error);
+        res.status(500).json({ 
+        message: 'Error finding substitutes',
+        error: error.message 
+        });
     }
-    });
+});
 
     router.put('/:id', async (req, res) => {
     try {

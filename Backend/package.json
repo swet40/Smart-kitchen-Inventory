@@ -20,6 +20,7 @@
     "express": "^5.1.0",
     "mongodb": "^6.19.0",
     "mongoose": "^8.18.0",
+    "notistack": "^3.0.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0"

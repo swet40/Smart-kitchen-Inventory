@@ -11,7 +11,7 @@ const findSubstitutes = async (recipe, inventory) => {
     const substitutionSuggestions = [];
     const inventoryNames = inventory.map(item => item.name.toLowerCase());
 
-    // Check each ingredient in the recipe
+
     for (const ingredient of recipe.ingredients) {
         const hasIngredient = inventoryNames.includes(ingredient.ingredientName.toLowerCase());
         
