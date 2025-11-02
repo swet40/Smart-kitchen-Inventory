@@ -26,13 +26,17 @@ const api = axios.create({
 
     // Recipes endpoints
     export const recipesAPI = {
-    getAll: () => api.get('/recipes'),
+    getAll: (filters = {}) => api.get('/recipes', { params: filters }),
     getWithServing: () => api.get('/recipes/with-serving-info'),
     getCanMake: () => api.get('/recipes/can-make'),
     getSubstitutes: (id) => api.get(`/recipes/${id}/substitutes`),
     findByIngredients: (ingredients) => api.get(`/recipes/use-ingredients?ingredients=${ingredients}`),
     getById: (id) => api.get(`/recipes/${id}`),
     generateShoppingList: (recipeIds) => api.post('/recipes/shopping-list', { recipeIds }),
+    getExternalRecipes: (cuisine, diet) => api.get(`/external/recipes?cuisine=${cuisine}&diet=${diet || ''}`)
+
     };
+
+    
 
 export default api;

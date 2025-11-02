@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Recipe = require('../model/Recipe');
 const InventoryItem = require('../model/InventoryItem.js'); // Make sure to add this import
+const { generateMockData } = require('../utils/mockDataGenerator');
+
 
 router.get('/with-serving-info', async (req, res) => {
     try {
@@ -109,18 +111,27 @@ router.get('/with-serving-info', async (req, res) => {
     }
     });
 
+    // Generate mock data route
     router.post('/generate-mock-data', async (req, res) => {
     try {
-        const { generateMockData } = require('../utils/mockDataGenerator');
-        const result = await generateMockData();
-        res.json({ 
+        const mockData = require('../utils/mockDataGenerator');
+
+        if (typeof mockData.generateMockData !== 'function') {
+        throw new Error('generateMockData function not found in mockDataGenerator');
+        }
+
+        const result = await mockData.generateMockData();
+
+        res.json({
         message: 'Mock data generated successfully',
-        data: result 
+        data: result
         });
     } catch (error) {
+        console.error('Error generating mock data:', error);
         res.status(500).json({ message: error.message });
     }
-    });
+});
+
 
     router.get('/:id', async (req, res) => {
     try {
@@ -199,5 +210,16 @@ router.get('/with-serving-info', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+// GET list of available cuisines
+router.get('/cuisines/list', async (req, res) => {
+    try {
+        const cuisines = await Recipe.distinct('cuisine');
+        res.json(cuisines);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 module.exports = router;

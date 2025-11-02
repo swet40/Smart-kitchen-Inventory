@@ -56,9 +56,11 @@ const IngredientRequirementSchema = new mongoose.Schema({
         enum: ['Main Course', 'Appetizer', 'Dessert', 'Bread', 'Rice', 'Curry', 'Snack', 'Breakfast', 'Beverage']
     },
     cuisine: {
-        type: String,
-        default: 'Indian'
+    type: String,
+    enum: ['Indian', 'Mexican', 'Thai', 'Chinese', 'Japanese'],
+    default: 'Indian'
     },
+
     ingredients: [IngredientRequirementSchema],
     steps: {
         type: [String],
@@ -84,6 +86,11 @@ const IngredientRequirementSchema = new mongoose.Schema({
         type: String,
         enum: ['Easy', 'Medium', 'Hard'],
         default: 'Medium'
+    },
+    foodType: {
+    type: String,
+    enum: ['Veg', 'Non-Veg'],
+    default: 'Veg'
     },
     possibleSubstitutes: [{
         original: String,

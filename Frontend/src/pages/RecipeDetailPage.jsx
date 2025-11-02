@@ -1,123 +1,122 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-    Container, Typography, Box, Alert, CircularProgress,
-    Card, CardContent, List, ListItem, ListItemText,
-    Chip, Button, Dialog, DialogTitle, DialogContent,
-    Grid
-} from '@mui/material';
 import { recipesAPI } from '../services/api';
-import SubstitutionSuggestions from '../components/recipes/SubstitutionSuggestions';
+import {
+  Container,
+  Typography,
+  CircularProgress,
+  Card,
+  CardContent,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Box,
+  Chip
+} from '@mui/material';
 
 function RecipeDetailPage() {
-    const { id } = useParams();
-    const [recipe, setRecipe] = useState(null);
-    const [substitutes, setSubstitutes] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [subDialogOpen, setSubDialogOpen] = useState(false);
+  const { id } = useParams();
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-    useEffect(() => {
-        fetchRecipeDetails();
-    }, [id]);
+  useEffect(() => {
+    fetchRecipe();
+  }, [id]);
 
-    const fetchRecipeDetails = async () => {
-        try {
-            const [recipeResponse, substitutesResponse] = await Promise.all([
-                recipesAPI.getById(id),
-                recipesAPI.getSubstitutes(id)
-            ]);
+  const fetchRecipe = async () => {
+    try {
+      const res = await recipesAPI.getById(id);
+      setRecipe(res.data);
+    } catch (err) {
+      setError('Failed to load recipe details');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            setRecipe(recipeResponse.data);
-            setSubstitutes(substitutesResponse.data);
-        } catch (err) {
-            setError('Failed to fetch recipe details');
-        } finally {
-            setLoading(false);
-        }
-    };
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography color="error">{error}</Typography>;
+  if (!recipe) return null;
 
-    if (loading) return <CircularProgress />;
-    if (error) return <Alert severity="error">{error}</Alert>;
-    if (!recipe) return <Alert severity="warning">Recipe not found</Alert>;
+  return (
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Card>
+        <CardContent>
+          <Typography variant="h4" gutterBottom>{recipe.name}</Typography>
 
-    return (
-        <Container maxWidth="lg">
-            <Box sx={{ mt: 4, mb: 4 }}>
-                <Typography variant="h3" component="h1" gutterBottom>
-                    {recipe.name}
-                </Typography>
-
-                <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
-                    <Chip label={recipe.category} color="primary" />
-                    <Chip label={`Serves: ${recipe.serves}`} />
-                    <Chip label={`Prep: ${recipe.preparationTime} mins`} />
-                    <Chip label={recipe.difficulty} />
-                </Box>
-
-                {substitutes && substitutes.missingIngredients.length > 0 && (
-                    <Alert 
-                        severity="warning" 
-                        action={
-                            <Button color="inherit" size="small" onClick={() => setSubDialogOpen(true)}>
-                                View Substitutes
-                            </Button>
-                        }
-                        sx={{ mb: 3 }}
-                    >
-                        Missing {substitutes.missingIngredients.length} ingredients
-                    </Alert>
-                )}
-
-                <Grid container spacing={4}>
-                    <Grid item xs={12} md={6}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    Ingredients
-                                </Typography>
-                                <List>
-                                    {recipe.ingredients.map((ingredient, index) => (
-                                        <ListItem key={index}>
-                                            <ListItemText
-                                                primary={`${ingredient.ingredientName} - ${ingredient.quantity} ${ingredient.unit}`}
-                                            />
-                                        </ListItem>
-                                    ))}
-                                </List>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-
-                    <Grid item xs={12} md={6}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    Cooking Steps
-                                </Typography>
-                                <List>
-                                    {recipe.steps.map((step, index) => (
-                                        <ListItem key={index}>
-                                            <ListItemText
-                                                primary={`Step ${index + 1}: ${step}`}
-                                            />
-                                        </ListItem>
-                                    ))}
-                                </List>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
+          {recipe.imageUrl && (
+            <Box mb={2}>
+              <img
+                src={recipe.imageUrl}
+                alt={recipe.name}
+                style={{
+                  width: '100%',
+                  borderRadius: '12px',
+                  objectFit: 'cover'
+                }}
+              />
             </Box>
+          )}
 
-            <Dialog open={subDialogOpen} onClose={() => setSubDialogOpen(false)} maxWidth="md" fullWidth>
-                <DialogTitle>Ingredient Substitutions</DialogTitle>
-                <DialogContent>
-                    <SubstitutionSuggestions substitutes={substitutes} />
-                </DialogContent>
-            </Dialog>
-        </Container>
-    );
+          <Typography color="textSecondary" gutterBottom>
+            {recipe.cuisine} • {recipe.foodType || 'Veg'} • Serves: {recipe.serves}
+          </Typography>
+
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {recipe.description}
+          </Typography>
+
+          {/* Tags */}
+          <Box mb={2}>
+            {recipe.tags?.map((tag) => (
+              <Chip
+                key={tag}
+                label={tag}
+                color={tag === 'Vegetarian' ? 'success' : 'error'}
+                sx={{ mr: 1 }}
+              />
+            ))}
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          {/* Ingredients */}
+          <Typography variant="h6" gutterBottom>Ingredients</Typography>
+          <List dense>
+            {recipe.ingredients?.map((ing, index) => (
+              <ListItem key={index}>
+                <ListItemText
+                  primary={`${ing.ingredientName}`}
+                  secondary={`${ing.quantity} ${ing.unit}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+
+          <Divider sx={{ my: 2 }} />
+
+          {/* Steps */}
+          <Typography variant="h6" gutterBottom>Cooking Steps</Typography>
+          {recipe.steps?.length ? (
+            <List>
+              {recipe.steps.map((step, index) => (
+                <ListItem key={index} alignItems="flex-start">
+                  <ListItemText
+                    primary={`Step ${index + 1}`}
+                    secondary={step}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography color="text.secondary">No step-by-step instructions available.</Typography>
+          )}
+        </CardContent>
+      </Card>
+    </Container>
+  );
 }
 
 export default RecipeDetailPage;

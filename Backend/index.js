@@ -1,5 +1,7 @@
 const InventoryItem = require('./model/InventoryItem.js');
 const Recipe = require('./model/Recipe.js');
+const recipeRoutes = require('./routes/recipeRoutes');
+const spoonacularRoutes = require('./routes/spoonacularRoutes');
 
 require('dotenv').config();
 const express = require("express");
@@ -18,6 +20,11 @@ app.use(express.json()); // Parse JSON bodies
 // Routes
 app.use('/api/inventory', require('./routes/inventoryRoutes'));
 app.use('/api/recipes', require('./routes/recipeRoutes'));
+app.use('/api/iot', require('./routes/iotRoutes'));
+app.use('/api/recipes', recipeRoutes);
+app.use('/api/external', spoonacularRoutes);
+
+
 
     // Basic route for testing
     app.get("/", (req, res) => {
